@@ -1,0 +1,28 @@
+.container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-size: large;
+}
+
+.form {
+  padding: 24px;
+
+  /* necessary for showing the login button and error message on the same line */
+  min-width: 320px;
+}
+
+.submit-button {
+  margin-right: 12px;
+
+  /* prevent growing when loading indicator is shown  */
+  min-width: 100px !important;
+}
+
+.error-msg {
+  color: red;
+}
