@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://reqres.in';
+const BACKEND_BASE_URL = 'https://work.vint-x.net';
+const ACCESS_TOKEN_HEADER_NAME = 'x-test-app-jwt-token';
 
 export default class ApiService {
   static axi = axios.create();
@@ -12,7 +13,7 @@ export default class ApiService {
 
   static responseInterceptor = null;
 
-  static init(/* unauthCallback */) {
+  static init(unauthCallback) {
     // Add a request interceptor
     ApiService.requestInterceptor = ApiService.axi.interceptors.request.use(
       config => {
@@ -33,21 +34,11 @@ export default class ApiService {
 
     // Add a response interceptor
     ApiService.responseInterceptor = ApiService.axi.interceptors.response.use(
-      response => {
-        // if (not authorized here or in the error handler) {
-        //   const {data} = response;
-        //   const {
-        //     extract some data
-        //   } = data;
-        //
-        //   if (INVALID_SESSION) {
-        //     unauthCallback();
-        //   }
-        //
-        //   throw normalizedError;
-        // }
-
-        return response;
+      response => response,
+      error => {
+        if (error?.response.status === 401) {
+          unauthCallback();
+        }
       },
     );
   }
@@ -71,6 +62,19 @@ export default class ApiService {
     ApiService.axi = axios.create();
   }
 
+  static setAccessToken(token) {
+    if (token) {
+      ApiService.axi.defaults.headers.common[ACCESS_TOKEN_HEADER_NAME] = token;
+    }
+  }
+
+  static clearAccessToken() {
+    delete ApiService.axi.defaults.headers.common[ACCESS_TOKEN_HEADER_NAME];
+  }
+
+  // Initialization
+  //---------------------------------------------------------------------------
+
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   // Auth
 
@@ -78,34 +82,33 @@ export default class ApiService {
     let response;
 
     try {
-      // For successful login use:
-      // "username": "eve.holt@reqres.in",
-      // "password": "cityslicka"
-      response = await ApiService.axi.post(`${BASE_URL}/api/login`, {
-        email: username,
+      response = await ApiService.axi.post(`${BACKEND_BASE_URL}/api/login`, {
+        username,
         password,
       });
     } catch (error) {
       const errorData = error.response.data;
-      const message = errorData.error;
+      const message = errorData.description;
 
       throw new Error(message);
     }
 
-    // Get something from the response's data or headers
-    // Store it in ApiService if necessary for later usage
-
-    const {token} = response.data;
+    const token = response.headers[ACCESS_TOKEN_HEADER_NAME.toLowerCase()];
+    ApiService.setAccessToken(token);
 
     return {
-      name: 'alexey',
+      name: username,
       token,
     };
   }
 
   static logout() {
+    ApiService.clearAccessToken();
     return Promise.resolve();
   }
+
+  // Auth
+  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   //= =======================================
   // Request cancellation

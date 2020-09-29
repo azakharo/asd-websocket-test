@@ -77,7 +77,7 @@ const Login = () => {
             className={cx('submit-button')}>
             Login
           </Button>
-          {error && <span className={cx('error-msg')}>{error}</span>}
+          {error && <div className={cx('error-msg')}>{error}</div>}
         </Form.Item>
       </Form>
     </div>

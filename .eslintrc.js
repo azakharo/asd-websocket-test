@@ -43,6 +43,8 @@ module.exports = {
     "react-hooks/rules-of-hooks": "error",
     "import/extensions": [0, "never"],
     "import/prefer-default-export": 1,
+
+    'react/destructuring-assignment': [0, 'always', { ignoreClassFields: true }],
   },
   parser: 'babel-eslint',
   settings: {

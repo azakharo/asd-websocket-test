@@ -9,10 +9,12 @@ import thunkMiddleware from 'redux-thunk';
 
 import {loadState, saveState} from 'helpers/persistState';
 import rootReducer from 'reducers';
+import ApiService from 'services/ApiService';
 import App from 'components/App';
 import history from '../../history';
 
 const persistedState = loadState();
+ApiService.setAccessToken(persistedState?.auth?.user?.token);
 
 const store = createStore(
   rootReducer,
@@ -27,9 +29,20 @@ const store = createStore(
 store.subscribe(
   throttle(() => {
     const state = store.getState();
-    const {auth} = state;
+    const authState = state.auth;
 
-    saveState({auth});
+    if (!authState) {
+      return;
+    }
+
+    const {isAuthenticated, user} = authState;
+
+    saveState({
+      auth: {
+        isAuthenticated,
+        user,
+      },
+    });
   }, 1000),
 );
 
