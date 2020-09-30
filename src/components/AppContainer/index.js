@@ -10,6 +10,7 @@ import thunkMiddleware from 'redux-thunk';
 import {loadState, saveState} from 'helpers/persistState';
 import rootReducer from 'reducers';
 import ApiService from 'services/ApiService';
+import socketConnectionMiddleware from 'middlewares/socketConnection';
 import App from 'components/App';
 import history from '../../history';
 
@@ -22,6 +23,7 @@ const store = createStore(
   composeWithDevTools(
     applyMiddleware(
       thunkMiddleware, // lets us dispatch() functions
+      socketConnectionMiddleware,
     ),
   ),
 );

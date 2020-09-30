@@ -6,7 +6,7 @@ import {
   ACTION__LOGOUT,
   ACTION__LOGOUT_FAIL,
   ACTION__LOGOUT_SUCCESS,
-} from '../constants/actions';
+} from 'constants/actions';
 
 export const login = (username, password) => dispatch => {
   dispatch({

@@ -1,3 +1,7 @@
+// app init/uninit. May be necessary for some initialization and cleanup stuff
+export const ACTION__APP__INIT = 'ACTION__APP__INIT';
+export const ACTION__APP__UNINIT = 'ACTION__APP__UNINIT';
+
 // login/logout related actions
 export const ACTION__LOGIN = 'ACTION__LOGIN';
 export const ACTION__LOGIN_SUCCESS = 'ACTION__LOGIN_SUCCESS';
@@ -5,3 +9,19 @@ export const ACTION__LOGIN_FAIL = 'ACTION__LOGIN_FAIL';
 export const ACTION__LOGOUT = 'ACTION__LOGOUT';
 export const ACTION__LOGOUT_SUCCESS = 'ACTION__LOGOUT_SUCCESS';
 export const ACTION__LOGOUT_FAIL = 'ACTION__LOGOUT_FAIL';
+
+// subscribing
+export const ACTION__SUBSCRIBE = 'ACTION__SUBSCRIBE';
+export const ACTION__SUBSCRIBE_SUCCESS = 'ACTION__SUBSCRIBE_SUCCESS';
+export const ACTION__SUBSCRIBE_FAIL = 'ACTION__SUBSCRIBE_FAIL';
+
+// socket connection
+export const ACTION__SOCKET__CONNECT = 'ACTION__SOCKET__CONNECT';
+export const ACTION__SOCKET_CONNECTION__OPENED =
+  'ACTION__SOCKET_CONNECTION__OPENED';
+export const ACTION__SOCKET_CONNECTION__CLOSED =
+  'ACTION__SOCKET_CONNECTION__CLOSED';
+export const ACTION__SOCKET_CONNECTION__ERROR =
+  'ACTION__SOCKET_CONNECTION__ERROR';
+export const ACTION__SOCKET_CONNECTION__GOT_MSG =
+  'ACTION__SOCKET_CONNECTION__GOT_MSG';

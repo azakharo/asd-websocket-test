@@ -3,6 +3,11 @@ import axios from 'axios';
 const BACKEND_BASE_URL = 'https://work.vint-x.net';
 const ACCESS_TOKEN_HEADER_NAME = 'x-test-app-jwt-token';
 
+const getErrorMessage = error => {
+  const errorData = error.response.data;
+  return errorData.description;
+};
+
 export default class ApiService {
   static axi = axios.create();
 
@@ -39,6 +44,8 @@ export default class ApiService {
         if (error?.response.status === 401) {
           unauthCallback();
         }
+
+        return Promise.reject(error);
       },
     );
   }
@@ -87,9 +94,7 @@ export default class ApiService {
         password,
       });
     } catch (error) {
-      const errorData = error.response.data;
-      const message = errorData.description;
-
+      const message = getErrorMessage(error);
       throw new Error(message);
     }
 
@@ -109,6 +114,20 @@ export default class ApiService {
 
   // Auth
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  // Returns the websocket server's URL
+  static async subscribe() {
+    let response;
+
+    try {
+      response = await ApiService.axi.get(`${BACKEND_BASE_URL}/api/subscribe`);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      throw new Error(message);
+    }
+
+    return response.data.url;
+  }
 
   //= =======================================
   // Request cancellation
