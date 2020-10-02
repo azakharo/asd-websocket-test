@@ -40,16 +40,16 @@ export default class SocketService {
   };
 
   handleConnectionClose = error => {
-    this.dispatch({type: ACTION__SOCKET_CONNECTION__CLOSED, error});
-
     console.log(error);
     console.log('The socket connection has been closed');
+
+    this.dispatch({type: ACTION__SOCKET_CONNECTION__CLOSED, error});
   };
 
   handleConnectionError = error => {
-    this.dispatch({type: ACTION__SOCKET_CONNECTION__ERROR, error});
-
     console.error('Socket connection error: ', error, 'Closing socket...');
+
+    this.dispatch({type: ACTION__SOCKET_CONNECTION__ERROR, error});
   };
 
   /**
