@@ -6,6 +6,7 @@ import {
   ACTION__SOCKET_CONNECTION__OPENED,
 } from '../constants/actions';
 
+// Be carefull, the following values are also used for the styling
 const STATUS_DISCONNECTED = 'disconnected';
 const STATUS_CONNECTING = 'connecting';
 const STATUS_CONNECTED = 'connected';
