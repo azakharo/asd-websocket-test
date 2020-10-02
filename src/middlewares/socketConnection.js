@@ -17,14 +17,43 @@ const isAuthenticated = store => store.getState().auth.isAuthenticated;
 
 const NEXT_MSG_TIMEOUT = 5000;
 let nextMsgTimer = null;
+const clearNextMsgTimer = () => {
+  if (nextMsgTimer) {
+    clearTimeout(nextMsgTimer);
+    nextMsgTimer = null;
+  }
+};
+
+const RESUBSCRIBE_INITIAL_TIMEOUT = 250;
+let resubscribeTimeout = RESUBSCRIBE_INITIAL_TIMEOUT;
+let resubscribeTimer = null;
+const clearResubscribeTimer = () => {
+  if (resubscribeTimer) {
+    clearTimeout(resubscribeTimer);
+    resubscribeTimer = null;
+  }
+  resubscribeTimeout = RESUBSCRIBE_INITIAL_TIMEOUT;
+};
 
 export default store => next => action => {
   /* eslint-disable-next-line default-case */
   switch (action.type) {
     case ACTION__LOGIN_SUCCESS:
-    case ACTION__SUBSCRIBE_FAIL:
       next(action);
       return store.dispatch(subscribe());
+
+    case ACTION__SUBSCRIBE_FAIL:
+      next(action);
+
+      resubscribeTimeout = Math.min(10000, resubscribeTimeout * 2);
+      resubscribeTimer = setTimeout(() => {
+        if (isAuthenticated(store)) {
+          store.dispatch(subscribe());
+        }
+      }, resubscribeTimeout);
+
+      return undefined;
+
     case ACTION__APP__INIT:
     case ACTION__SOCKET_CONNECTION__CLOSED:
       next(action);
@@ -32,24 +61,32 @@ export default store => next => action => {
         return store.dispatch(subscribe());
       }
       return undefined;
+
     case ACTION__SUBSCRIBE_SUCCESS:
+      clearResubscribeTimer();
+
       next(action);
+
       socketService = new SocketService(action.payload, store.dispatch);
       socketService.connect();
+
       return undefined;
+
     case ACTION__LOGOUT:
+      clearNextMsgTimer();
+      clearResubscribeTimer();
+
       if (socketService) {
         socketService.disconnect();
         socketService = null;
       }
       return next(action);
+
     // New msg received - clear the prev timer and start the new one.
     case ACTION__SOCKET_CONNECTION__GOT_MSG:
       next(action);
 
-      if (nextMsgTimer) {
-        clearTimeout(nextMsgTimer);
-      }
+      clearNextMsgTimer();
 
       nextMsgTimer = setTimeout(() => {
         if (socketService) {
@@ -57,16 +94,18 @@ export default store => next => action => {
           socketService = null;
         }
 
-        // Looks like the current subscription is out-of-date
         store.dispatch({type: ACTION__SOCKET_CONNECTION__NEXT_MSG_TIMEOUT});
       }, NEXT_MSG_TIMEOUT);
 
       return undefined;
+
     // New msg timeout - force re-connect.
     case ACTION__SOCKET_CONNECTION__NEXT_MSG_TIMEOUT:
       next(action);
+
       // Looks like the current subscription is out-of-date
       store.dispatch({type: ACTION__SUBSCRIBE_FAIL});
+
       return undefined;
   }
 
