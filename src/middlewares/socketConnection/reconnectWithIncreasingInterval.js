@@ -4,7 +4,6 @@ import {
   ACTION__SUBSCRIBE_SUCCESS,
 } from 'constants/actions';
 import {subscribe} from 'actionCreators/socketConnection';
-import isAuthenticated from './isAuthenticated';
 
 const RESUBSCRIBE_INITIAL_TIMEOUT = 250;
 let resubscribeTimeout = RESUBSCRIBE_INITIAL_TIMEOUT;
@@ -25,11 +24,10 @@ export default store => next => action => {
       next(action);
 
       resubscribeTimeout = Math.min(10000, resubscribeTimeout * 2);
-      resubscribeTimer = setTimeout(() => {
-        if (isAuthenticated(store)) {
-          store.dispatch(subscribe());
-        }
-      }, resubscribeTimeout);
+      resubscribeTimer = setTimeout(
+        () => store.dispatch(subscribe()),
+        resubscribeTimeout,
+      );
 
       return undefined;
 

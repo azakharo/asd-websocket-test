@@ -6,7 +6,15 @@ import {
 } from 'constants/actions';
 
 /* eslint-disable-next-line import/prefer-default-export */
-export const subscribe = () => dispatch => {
+export const subscribe = () => (dispatch, getState) => {
+  const {
+    auth: {isAuthenticated},
+  } = getState();
+
+  if (!isAuthenticated) {
+    return Promise.resolve();
+  }
+
   dispatch({
     type: ACTION__SUBSCRIBE,
   });

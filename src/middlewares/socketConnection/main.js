@@ -8,7 +8,6 @@ import {
 } from 'constants/actions';
 import {subscribe} from 'actionCreators/socketConnection';
 import SocketService from 'services/SocketService';
-import isAuthenticated from './isAuthenticated';
 
 let socketService = null;
 
@@ -28,12 +27,7 @@ export default store => next => action => {
 
     case ACTION__APP__INIT:
       next(action);
-
-      if (isAuthenticated(store)) {
-        return store.dispatch(subscribe());
-      }
-
-      return undefined;
+      return store.dispatch(subscribe());
 
     case ACTION__SUBSCRIBE_SUCCESS:
       next(action);
@@ -51,12 +45,7 @@ export default store => next => action => {
     case ACTION__SOCKET_CONNECTION__CLOSED:
       deleteSocketService();
       next(action);
-
-      if (isAuthenticated(store)) {
-        return store.dispatch(subscribe());
-      }
-
-      return undefined;
+      return store.dispatch(subscribe());
 
     case ACTION__LOGOUT:
       deleteSocketService();
