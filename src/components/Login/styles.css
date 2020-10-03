@@ -12,6 +12,7 @@
 .form {
   padding: 24px;
   min-width: 320px;
+  min-height: 300px;
 }
 
 .submit-button {

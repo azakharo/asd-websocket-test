@@ -43,6 +43,8 @@ export default class SocketService {
     console.log(error);
     console.log('The socket connection has been closed');
 
+    this.disconnect();
+
     this.dispatch({type: ACTION__SOCKET_CONNECTION__CLOSED, error});
   };
 
@@ -71,6 +73,10 @@ export default class SocketService {
 
   disconnect = () => {
     if (this.ws) {
+      this.ws.onopen = null;
+      this.ws.onmessage = null;
+      this.ws.onclose = null;
+      this.ws.onerror = null;
       this.ws.close();
       this.ws = null;
     }
