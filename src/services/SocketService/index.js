@@ -17,7 +17,7 @@ export default class SocketService {
   }
 
   handleConnectionOpen = () => {
-    console.log('connected to the websocket server');
+    // console.log('connected to the websocket server');
 
     this.dispatch({type: ACTION__SOCKET_CONNECTION__OPENED});
   };
@@ -27,10 +27,12 @@ export default class SocketService {
     try {
       data = JSON.parse(event.data);
     } catch (err) {
+      /* eslint-disable no-console */
       console.log(
         'Could not parse data received from the socket server. Ignore the data.',
       );
       console.error(err);
+      /* eslint-enable */
       return;
     }
 
@@ -40,8 +42,8 @@ export default class SocketService {
   };
 
   handleConnectionClose = error => {
-    console.log(error);
-    console.log('The socket connection has been closed');
+    // console.log(error);
+    // console.log('The socket connection has been closed');
 
     this.disconnect();
 
@@ -49,7 +51,7 @@ export default class SocketService {
   };
 
   handleConnectionError = error => {
-    console.error('Socket connection error: ', error, 'Closing socket...');
+    // console.error('Socket connection error: ', error, 'Closing socket...');
 
     this.dispatch({type: ACTION__SOCKET_CONNECTION__ERROR, error});
   };
@@ -62,7 +64,7 @@ export default class SocketService {
   connect = () => {
     this.dispatch({type: ACTION__SOCKET__CONNECT});
 
-    console.log(`connecting to ${this.url}...`);
+    // console.log(`connecting to ${this.url}...`);
 
     this.ws = new WebSocket(this.url);
     this.ws.onopen = this.handleConnectionOpen;
