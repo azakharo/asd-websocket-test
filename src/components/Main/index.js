@@ -28,9 +28,7 @@ const Main = () => {
       <main>
         <div className={cx('status-container')}>
           <strong>Status:</strong>
-          <span className={cx('connection-status', {[status]: true})}>
-            {status}
-          </span>
+          <span className={cx('connection-status', status)}>{status}</span>
         </div>
         <div className={cx('time-container')}>
           <strong>Time:&nbsp;&nbsp;</strong>
