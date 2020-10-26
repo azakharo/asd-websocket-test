@@ -7,7 +7,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {PATHS} = require('./build-constants.js');
 
 const entries = {
-  app: path.resolve(PATHS.src, './index.js'),
+  app: path.resolve(PATHS.src, 'index.js'),
 };
 
 const htmlPluginInstances = [];
@@ -17,7 +17,7 @@ entryNames.forEach((entryName, entryInd) => {
       template: path.join(__dirname, './index.html'),
       filename: entryInd === 0 ? 'index.html' : `${entryName}.html`,
       path: PATHS.dist,
-      favicon: PATHS.images + '/' + '/favicon.ico',
+      favicon: path.join(PATHS.images, 'favicon.ico'),
       chunks: [entryName]
     })
   );
