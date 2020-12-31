@@ -40,7 +40,10 @@ module.exports = {
     'react/state-in-constructor': [1, 'never'],
     'react/jsx-props-no-spreading': 0,
 
+    // Hooks rules
     "react-hooks/rules-of-hooks": "error",
+    'react-hooks/exhaustive-deps': 'warn',
+
     "import/extensions": [0, "never"],
     "import/prefer-default-export": 1,
 
